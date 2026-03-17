@@ -69,9 +69,6 @@ export default function JobChart({ isMounted }: JobChartProps) {
     };
 
     useEffect(() => {
-        if (mergedData) {
-            return;
-        }
         async function load() {
             try {
                 const res = await fetch('/api/blsdata')
@@ -108,7 +105,7 @@ export default function JobChart({ isMounted }: JobChartProps) {
         }
 
         load();
-    }, [mergedData, isMounted]);
+    }, [isMounted]);
 
     if (loading) {
         return <div role="status" className="mx-auto mb-24">
@@ -149,7 +146,8 @@ export default function JobChart({ isMounted }: JobChartProps) {
                             tick={{ fontSize: 14 }}
                         />
                         <Tooltip
-                        formatter={(value: number) => formatter.format(value)}
+                        
+                        formatter={(value) => typeof value === 'number' ? formatter.format(value) : value}
                         wrapperStyle={{ fontSize: '14px' }}/>
                         <Legend />
 
