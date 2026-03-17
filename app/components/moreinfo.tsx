@@ -2,11 +2,7 @@
 
 import { motion } from "framer-motion";
 
-type MoreInfoProps = {
-    visible: boolean;
-};
-
-export default function MoreInfo({ visible }: MoreInfoProps) {
+export default function MoreInfo() {
 
     const style = {
         chartText: "font-sans text-lg",
@@ -18,39 +14,36 @@ export default function MoreInfo({ visible }: MoreInfoProps) {
 
     return (
         <div className="flex flex-col md:mx-auto mb-8">
-            {visible && (
-                <motion.h1
-                    key="moreinfo"
-                    className="relative font-sans font-extrabold p-2 rounded-md text-3xl mt-10 overflow-hidden"
-                >
-                    <motion.span
-                        initial={{
-                            scaleX: 0,
-                            y: 2,
-                            rotate: -0.8
-                        }}
-                        animate={{
-                            scaleX: 1,
-                            y: [2, -1, 1, 0],
-                            rotate: [-0.5, 0.3, -0.2, 0]
-                        }}
-                        transition={{
-                            scaleX: { duration: 1.6, ease: "easeOut" },
-                            y: { duration: 1.6, ease: "easeInOut" },
-                            rotate: { duration: 1.6, ease: "easeInOut" }
-                        }}
-                        className="
+            <motion.h1
+                key="moreinfo"
+                className="relative font-sans font-extrabold p-2 rounded-md text-3xl mt-10 overflow-hidden"
+            >
+                <motion.span
+                    initial={{
+                        scaleX: 0,
+                        y: 2,
+                        rotate: -0.8
+                    }}
+                    animate={{
+                        scaleX: 1,
+                        y: [2, -1, 1, 0],
+                        rotate: [-0.5, 0.3, -0.2, 0]
+                    }}
+                    transition={{
+                        scaleX: { duration: 1.6, ease: "easeOut" },
+                        y: { duration: 1.6, ease: "easeInOut" },
+                        rotate: { duration: 1.6, ease: "easeInOut" }
+                    }}
+                    className="
                             absolute inset-0
                             bg-yellow-200
                         "
-                        style={{ transformOrigin: "left" }}
-                    />
-                    <span className="relative z-10">
-                        This chart visualizes four major economic indicators in the US from 2010 to 2025:
-                    </span>
-                </motion.h1>
-            )
-            }
+                    style={{ transformOrigin: "left" }}
+                />
+                <span className="relative z-10">
+                    This chart visualizes four major economic indicators in the US from 2010 to 2025:
+                </span>
+            </motion.h1>
 
             {/* Section 1 */}
             <h2 className="font-sans font-semibold text-2xl mt-10 text-red-600">1. Job layoffs:</h2>

@@ -8,7 +8,7 @@ export default function Header() {
             </h1>
 
             <p className="mx-12 font-sans text-3xl my-20">
-                Layoff and job creations in the US since 2010 measured against
+                Layoff and job creations in the US since 2011 measured against
                 the Consumer Price Index (CPI) and the value of the US dollar.
             </p>
         </header>

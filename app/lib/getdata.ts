@@ -1,12 +1,10 @@
-'use server';
-
 export default async function GetData() {
     const url = "https://api.bls.gov/publicAPI/v2/timeseries/data/";
 
     const requestBody = {
-        seriesid: ["LAUCN040010000000005", "LAUCN040010000000006", "CUUR0000SA0L1E"],
-        startyear: "2010",
-        endyear: "2025",
+        seriesid: ["JTU000000000000000LDL", "JTU000000000000000HIL", "CUUR0000SA0L1E"],
+        startyear: "2011",
+        endyear: new Date().getFullYear().toString(),
         registrationKey: process.env.JOLT_KEY
     };
 
@@ -26,6 +24,7 @@ export default async function GetData() {
     }
 
     const data = await res.json();
+    console.log(data.message);
 
     if (!data.Results?.series) {
         console.error("Unexpected BLS response format:", data);
@@ -50,9 +49,9 @@ export default async function GetData() {
     const series = data.Results.series;
 
     const layoffSeries = series.find(
-        (s: { seriesID: string }) => s.seriesID === "LAUCN040010000000005");
+        (s: { seriesID: string }) => s.seriesID === "JTU000000000000000LDL");
     const creationSeries = series.find(
-        (s: { seriesID: string }) => s.seriesID === "LAUCN040010000000006");
+        (s: { seriesID: string }) => s.seriesID === "JTU000000000000000HIL");
     const consumerSeries = series.find(
         (s: { seriesID: string }) => s.seriesID === "CUUR0000SA0L1E");
 
@@ -123,11 +122,13 @@ export default async function GetData() {
         }));
     };
 
-    const layoffTotal = totalByYear(layoffSeries.data, "layoffs");
-    const creationTotal = totalByYear(creationSeries.data, "creations");
+    const layoffTotal = totalByYear(layoffSeries.data, "layoffs")
+    .map(d => ({ ...d, layoffs: d.layoffs as number * 1000 }));
+    const creationTotal = totalByYear(creationSeries.data, "creations")
+    .map(d => ({ ...d, creations: d.creations as number * 1000}));
     const trueCpi = cpiByYear(consumerSeries.data);
     const cpiTotal = normalizeCPI(trueCpi);
-    const dollarStrength = dollarValueOverTime(trueCpi, "2010")
+    const dollarStrength = dollarValueOverTime(trueCpi, "2026");
 
     return {
         layoffTotal,

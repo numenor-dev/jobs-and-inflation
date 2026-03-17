@@ -6,7 +6,7 @@ import MoreInfo from './moreinfo';
 
 export default function InfoContainer() {
     const [isVisible, setIsVisible] = useState(false);
-    const ref = useRef<HTMLDivElement | null>(null);
+    const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const element = ref.current;
@@ -19,7 +19,7 @@ export default function InfoContainer() {
                     observer.unobserve(entry.target);
                 }
             },
-            { threshold: 1 }
+            { threshold: 0.2 }
         );
 
         observer.observe(element);
@@ -47,7 +47,7 @@ export default function InfoContainer() {
                 mx-auto
             "
         >
-            {isVisible && <MoreInfo visible={isVisible} />}
+            <MoreInfo />
         </motion.div>
     );
 }

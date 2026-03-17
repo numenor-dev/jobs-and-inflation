@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import GetData from '../api/blsdata';
 
 import {
     LineChart,
@@ -53,6 +52,8 @@ type JobChartProps = {
     isMounted: () => void;
 }
 
+const formatter = new Intl.NumberFormat('en-US');
+
 export default function JobChart({ isMounted }: JobChartProps) {
     const [mergedData, setMergedData] = useState<MergedItem[] | null>(null);
     const [showCreationData, setShowCreationData] = useState<boolean>(false);
@@ -68,14 +69,18 @@ export default function JobChart({ isMounted }: JobChartProps) {
     };
 
     useEffect(() => {
+        if (mergedData) {
+            return;
+        }
         async function load() {
             try {
-                const res: DataApiResponse = await GetData();
+                const res = await fetch('/api/blsdata')
+                const data: DataApiResponse = await res.json();
 
-                const layoffs = res.layoffTotal ?? [];
-                const creations = res.creationTotal ?? [];
-                const cpi = res.cpiTotal ?? [];
-                const dollars = res.dollarStrength ?? [];
+                const layoffs = data.layoffTotal ?? [];
+                const creations = data.creationTotal ?? [];
+                const cpi = data.cpiTotal ?? [];
+                const dollars = data.dollarStrength ?? [];
 
                 const merged: MergedItem[] = layoffs.map(l => {
                     const year = l.year;
@@ -103,7 +108,7 @@ export default function JobChart({ isMounted }: JobChartProps) {
         }
 
         load();
-    }, [isMounted]);
+    }, [mergedData, isMounted]);
 
     if (loading) {
         return <div role="status" className="mx-auto mb-24">
@@ -119,15 +124,33 @@ export default function JobChart({ isMounted }: JobChartProps) {
     }
 
     return (
-        <section className="flex flex-col max-w-8xl md:mx-auto sm:mx-10">
-            <div className="xl:max-w-7xl lg:max-w-5xl lg:px-10 md:max-w-3xl md:px-4 md:py-12 sm:max-w-xl w-screen bg-white py-6 rounded-xl shadow-lg mb-14">
-                <ResponsiveContainer width="100%" aspect={1.7}>
-                    <LineChart data={mergedData ?? []}>
+        <section className="flex flex-col max-w-7xl md:mx-auto">
+            <div className="xl:max-w-7xl lg:max-w-5xl lg:px-10 md:max-w-3xl px-5 md:py-12 bg-white w-screen py-5 rounded-xl shadow-lg mb-14">
+                <ResponsiveContainer width="100%" height={570}>
+                    <LineChart data={mergedData ?? []} margin={{ top: 5, left: 30, bottom: 5 }}>
                         <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-                        <XAxis dataKey="year" />
-                        <YAxis yAxisId="left" />
-                        <YAxis yAxisId="right" orientation="right" />
-                        <Tooltip />
+                        <XAxis
+                            dataKey="year"
+                            angle={-45}
+                            textAnchor="end"
+                            height={60}
+                            tick={{ fontSize: 14 }}
+                        />
+                        <YAxis
+                            yAxisId="left"
+                            width={50}
+                            tick={{ fontSize: 14 }}
+                            tickFormatter={(value) => formatter.format(value)}
+                        />
+                        <YAxis
+                            yAxisId="right"
+                            orientation="right"
+                            width={35}
+                            tick={{ fontSize: 14 }}
+                        />
+                        <Tooltip
+                        formatter={(value: number) => formatter.format(value)}
+                        wrapperStyle={{ fontSize: '14px' }}/>
                         <Legend />
 
                         <Line
@@ -177,7 +200,7 @@ export default function JobChart({ isMounted }: JobChartProps) {
                 </ResponsiveContainer>
 
                 {/* Toggles */}
-                <div className="flex md:flex-row flex-col md:items-center md:mt-6 mt-3">
+                <div className="flex md:flex-row flex-col md:items-center mt-3">
                     <label className="md:mx-auto mt-10 ml-12">
                         <input
                             type="checkbox"
