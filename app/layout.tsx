@@ -19,7 +19,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="antialiased">
       <body
         className='bg-zinc-100 font-sans text-zinc-900 min-h-screen'
       >
