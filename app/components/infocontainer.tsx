@@ -9,7 +9,7 @@ export default function InfoContainer() {
     const isVisible = useInView(ref, { once: true, amount: 0 });
 
     return (
-        <div className="bg-slate-200 w-full">
+        <div className="bg-slate-200 dark:bg-slate-950 w-full">
             <motion.div
                 ref={ref}
                 initial={{ opacity: 0, y: 50 }}

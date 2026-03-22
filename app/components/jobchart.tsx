@@ -1,6 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useWindowSize } from '../hooks/useWindowSize';
+import { usePrefersDark } from '../hooks/usePreferDark';
+import { toNumberOrNull, numberFormatter } from '../utils/formatters';
 
 import {
     LineChart,
@@ -52,13 +55,7 @@ type JobChartProps = {
     isMounted: () => void;
 }
 
-const formatter = new Intl.NumberFormat('en-US');
-
-const toNumberOrNull = (v: unknown): number | null => {
-    if (v === null || v === undefined) return null;
-    const n = Number(v);
-    return Number.isFinite(n) ? n : null;
-};
+const formatter = numberFormatter;
 
 export default function JobChart({ isMounted }: JobChartProps) {
     const [mergedData, setMergedData] = useState<MergedItem[] | null>(null);
@@ -67,17 +64,9 @@ export default function JobChart({ isMounted }: JobChartProps) {
     const [showDollarData, setShowDollarData] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const [windowWidth, setWindowWidth] = useState<number>(1024);
+    const { isMobile, isTablet } = useWindowSize();
+    const prefersDark = usePrefersDark();
 
-    useEffect(() => {
-        setWindowWidth(window.innerWidth);
-        const handleResize = () => setWindowWidth(window.innerWidth);
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    const isMobile = windowWidth < 768;
-    const isTablet = windowWidth < 1024;
 
     useEffect(() => {
         async function load() {
@@ -133,8 +122,8 @@ export default function JobChart({ isMounted }: JobChartProps) {
 
     return (
         <section className="flex flex-col max-w-7xl md:mx-auto">
-            <div className="xl:max-w-7xl lg:max-w-5xl lg:px-10 md:max-w-3xl px-5 md:py-12 bg-white w-screen py-5 rounded-xl shadow-lg mb-14">
-                <ResponsiveContainer width="100%" height={isMobile ? 320 : 570}>
+            <div className="xl:max-w-7xl lg:max-w-5xl lg:px-10 md:max-w-3xl px-5 md:py-12 bg-white dark:bg-slate-700 w-screen py-5 rounded-xl shadow-lg mb-14">
+                <ResponsiveContainer width="100%" height={isMobile ? 300 : 570}>
                     <LineChart
                         data={mergedData ?? []}
                         margin={{
@@ -144,19 +133,22 @@ export default function JobChart({ isMounted }: JobChartProps) {
                             right: isMobile ? 0 : 0
                         }}
                     >
-                        <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+                        <CartesianGrid
+                            stroke={prefersDark ? '#475569' : '#eee'}
+                            strokeDasharray="5 5"
+                        />
                         <XAxis
                             dataKey="year"
                             angle={-45}
                             textAnchor="end"
                             height={60}
-                            tick={{ fontSize: isMobile ? 11 : 14 }}
-                            interval={isMobile ? 4 : isTablet ? 2 : 1}
+                            tick={{ fontSize: isMobile ? 11 : 14, fill: prefersDark ? '#cbd5e1' : '#666' }}
+                            interval={isMobile ? 4 : isTablet ? 2 : 1}  // missing
                         />
                         <YAxis
                             yAxisId="left"
-                            width={isMobile ? 38 : 50}
-                            tick={{ fontSize: isMobile ? 11 : 14 }}
+                            width={isMobile ? 45 : 50}
+                            tick={{ fontSize: isMobile ? 11 : 14, fill: prefersDark ? '#cbd5e1' : '#666' }}
                             tickFormatter={(value) =>
                                 isMobile
                                     ? `${(value / 1000).toFixed(0)}k`
@@ -167,15 +159,25 @@ export default function JobChart({ isMounted }: JobChartProps) {
                             yAxisId="right"
                             orientation="right"
                             width={isMobile ? 24 : 35}
-                            tick={{ fontSize: isMobile ? 11 : 14 }}
+                            tick={{ fontSize: isMobile ? 11 : 14, fill: prefersDark ? '#cbd5e1' : '#666' }}
                         />
                         <Tooltip
                             formatter={(value) =>
                                 typeof value === 'number' ? formatter.format(value) : value
                             }
                             wrapperStyle={{ fontSize: isMobile ? '12px' : '14px' }}
+                            contentStyle={{
+                                backgroundColor: prefersDark ? '#1e293b' : '#fff',
+                                borderColor: prefersDark ? '#475569' : '#e2e8f0',
+                                color: prefersDark ? '#f1f5f9' : '#111',
+                            }}
                         />
-                        <Legend wrapperStyle={{ fontSize: isMobile ? '12px' : '14px' }} />
+                        <Legend
+                            wrapperStyle={{
+                                fontSize: isMobile ? '12px' : '14px',
+                                color: prefersDark ? '#cbd5e1' : '#666',
+                            }}
+                        />
                         <Line
                             yAxisId="left"
                             type="monotone"
@@ -223,32 +225,35 @@ export default function JobChart({ isMounted }: JobChartProps) {
                 </ResponsiveContainer>
 
                 {/* Toggles */}
-                <div className="flex md:flex-row flex-col md:items-center mt-3">
-                    <label className="md:mx-auto mt-10 md:ml-12 ml-4">
+                <div className="flex md:flex-row flex-col md:items-center mt-12 gap-y-3">
+                    <label className="md:mx-auto md:ml-12 ml-4">
                         <input
                             type="checkbox"
                             checked={showCreationData}
+                            className="h-3.5 w-3.5"
                             onChange={() => setShowCreationData(!showCreationData)}
                         />
-                        <span className="font-sans text-lg ml-2">Show job creations</span>
+                        <span className="font-sans text-lg ml-2 text-gray-900 dark:text-slate-200">Show job creations</span>
                     </label>
 
-                     <label className="md:mx-auto mt-10 md:ml-12 ml-4">
+                    <label className="md:mx-auto md:ml-12 ml-4">
                         <input
                             type="checkbox"
                             checked={showCPIData}
+                            className="h-3.5 w-3.5"
                             onChange={() => setShowCPIData(!showCPIData)}
                         />
-                        <span className="font-sans text-lg ml-2">Show Consumer Price Index</span>
+                        <span className="font-sans text-lg ml-2 text-gray-900 dark:text-slate-200">Show Consumer Price Index</span>
                     </label>
 
-                     <label className="md:mx-auto mt-10 md:ml-12 ml-4">
+                    <label className="md:mx-auto md:ml-12 ml-4">
                         <input
                             type="checkbox"
                             checked={showDollarData}
+                            className="h-3.5 w-3.5"
                             onChange={() => setShowDollarData(!showDollarData)}
                         />
-                        <span className="font-sans text-lg ml-2">Show US dollar value</span>
+                        <span className="font-sans text-lg ml-2 text-gray-900 dark:text-slate-200">Show US dollar value</span>
                     </label>
                 </div>
             </div>

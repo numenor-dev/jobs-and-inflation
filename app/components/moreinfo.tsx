@@ -13,9 +13,9 @@ export default function MoreInfo() {
     };
 
     return (
-        <div className="flex flex-col mb-8">
+        <div className="flex flex-col">
             <motion.h1
-                className="relative font-sans font-extrabold p-2 rounded-md text-3xl mt-10 overflow-hidden"
+                className="relative lg:max-w-7xl md:max-w-2xl max-w-md mx-auto p-3 font-sans font-extrabold rounded-md text-3xl mt-7 overflow-hidden"
             >
                 <motion.span
                     initial={{ scaleX: 0, y: 2, rotate: -0.8 }}
@@ -29,7 +29,7 @@ export default function MoreInfo() {
                         y: { duration: 1.6, ease: "easeInOut" },
                         rotate: { duration: 1.6, ease: "easeInOut" }
                     }}
-                    className="absolute inset-0 bg-yellow-200"
+                    className="absolute inset-0 bg-emerald-400/60 dark:bg-emerald-400/40 rounded-2xl"
                     style={{ transformOrigin: "left" }}
                 />
                 <span className="relative z-10">
@@ -38,26 +38,26 @@ export default function MoreInfo() {
             </motion.h1>
 
             {/* Section 1 - Indicator definitions */}
-            <h2 className={`${style.sectionHeader} text-red-600`}>1. Job layoffs:</h2>
+            <h2 className={`${style.sectionHeader}`}>1. Job layoffs:</h2>
             <p className={style.body}>
                 This line shows the total number of layoffs each year based on Bureau of Labor Statistics (BLS) data.
                 Higher points represent years when more people lost jobs, often coinciding with major economic downturns (e.g., recessions, market corrections, global events).
             </p>
 
-            <h2 className={`${style.sectionHeader} text-green-600`}>2. Job creations:</h2>
+            <h2 className={`${style.sectionHeader}`}>2. Job creations:</h2>
             <p className={style.body}>
                 This line represents the total number of new jobs added each year.
                 Tracking job creation alongside layoffs gives a clearer picture of whether the labor market is expanding or contracting.
             </p>
 
-            <h2 className={`${style.sectionHeader} text-amber-900`}>3. Consumer Price Index (CPI), normalized:</h2>
+            <h2 className={`${style.sectionHeader}`}>3. Consumer Price Index (CPI), normalized:</h2>
             <p className={style.body}>
                 The CPI line reflects inflation, showing how the cost of goods and services has changed over time.
                 The values are normalized between 0 and 1 so it can be displayed here alongside the job data.
                 A rising CPI indicates increasing living costs (inflation).
             </p>
 
-            <h2 className={`${style.sectionHeader} text-blue-600`}>4. Dollar Value:</h2>
+            <h2 className={`${style.sectionHeader}`}>4. Dollar Value:</h2>
             <p className={style.body}>
                 This line tracks the relative strength of the U.S. dollar using CPI values, with 2011 set as the baseline.
                 Values above 1 mean the dollar was stronger than in 2011; values below 1 mean it lost value or became weaker.

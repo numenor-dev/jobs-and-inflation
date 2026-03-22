@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="antialiased">
       <body
-        className='bg-zinc-100 font-sans text-zinc-900 min-h-screen'
+        className="font-sans min-h-screen"
       >
         {children}
       </body>
