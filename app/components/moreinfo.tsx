@@ -143,7 +143,7 @@ export default function MoreInfo() {
             <SectionLabel>Why do these indicators matter together?</SectionLabel>
             <div className="flex flex-col divide-y divide-zinc-200 dark:divide-zinc-700 border border-zinc-200 dark:border-zinc-700 rounded-xl overflow-hidden">
                 {whyMatters.map((item) => (
-                    <div key={item.title} className="px-5 py-4 bg-zinc-50 dark:bg-zinc-800/80">
+                    <div key={item.title} className="px-5 py-4 bg-zinc-50 dark:bg-slate-800/80">
                         <h3 className="font-sans font-semibold text-lg text-zinc-800 dark:text-zinc-300 mb-1">{item.title}</h3>
                         <p className="font-sans text-base text-zinc-700 dark:text-zinc-400 leading-relaxed">{item.body}</p>
                     </div>

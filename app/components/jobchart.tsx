@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTheme } from 'next-themes';
 import { useWindowSize } from '../hooks/useWindowSize';
-import { usePrefersDark } from '../hooks/usePreferDark';
 import { toNumberOrNull, numberFormatter } from '../utils/formatters';
 
 import {
@@ -64,8 +64,11 @@ export default function JobChart({ isMounted }: JobChartProps) {
     const [showDollarData, setShowDollarData] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
+
     const { isMobile, isTablet } = useWindowSize();
-    const prefersDark = usePrefersDark();
+
+    const { resolvedTheme } = useTheme();
+    const prefersDark = resolvedTheme === 'dark';
 
 
     useEffect(() => {
@@ -122,7 +125,7 @@ export default function JobChart({ isMounted }: JobChartProps) {
 
     return (
         <section className="flex flex-col max-w-7xl md:mx-auto">
-            <div className="xl:max-w-7xl lg:max-w-5xl lg:px-10 md:max-w-3xl px-5 md:py-12 bg-white dark:bg-slate-700/80 w-screen py-5 rounded-xl shadow-lg mb-14">
+            <div className="xl:max-w-7xl lg:max-w-5xl lg:px-10 md:max-w-3xl px-5 md:py-12 bg-white dark:bg-slate-900/40 md:w-screen w-full py-5 rounded-xl shadow-lg mb-14">
                 <ResponsiveContainer width="100%" height={isMobile ? 300 : 570}>
                     <LineChart
                         data={mergedData ?? []}
@@ -134,8 +137,8 @@ export default function JobChart({ isMounted }: JobChartProps) {
                         }}
                     >
                         <CartesianGrid
-                            stroke={prefersDark ? '#475569' : '#eee'}
-                            strokeDasharray="5 5"
+                            stroke={prefersDark ? '#75909C' : '#0C171A'}
+                            strokeWidth={0.2}
                         />
                         <XAxis
                             dataKey="year"
@@ -143,7 +146,7 @@ export default function JobChart({ isMounted }: JobChartProps) {
                             textAnchor="end"
                             height={60}
                             tick={{ fontSize: isMobile ? 11 : 14, fill: prefersDark ? '#cbd5e1' : '#666' }}
-                            interval={isMobile ? 4 : isTablet ? 2 : 1}  // missing
+                            interval={isMobile ? 4 : isTablet ? 2 : 1}
                         />
                         <YAxis
                             yAxisId="left"
