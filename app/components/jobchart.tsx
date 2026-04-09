@@ -122,7 +122,7 @@ export default function JobChart({ isMounted }: JobChartProps) {
 
     return (
         <section className="flex flex-col max-w-7xl md:mx-auto">
-            <div className="xl:max-w-7xl lg:max-w-5xl lg:px-10 md:max-w-3xl px-5 md:py-12 bg-white dark:bg-slate-700 w-screen py-5 rounded-xl shadow-lg mb-14">
+            <div className="xl:max-w-7xl lg:max-w-5xl lg:px-10 md:max-w-3xl px-5 md:py-12 bg-white dark:bg-slate-700/80 w-screen py-5 rounded-xl shadow-lg mb-14">
                 <ResponsiveContainer width="100%" height={isMobile ? 300 : 570}>
                     <LineChart
                         data={mergedData ?? []}

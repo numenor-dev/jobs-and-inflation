@@ -11,7 +11,7 @@ export default function AppContainer() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   return (
-    <main className="flex flex-col bg-slate-100 dark:bg-slate-950 w-auto m-h-screen">
+    <main className="flex flex-col bg-zinc-200/50 dark:bg-slate-950 w-auto m-h-screen">
       <Header />
       <JobChart isMounted={() => setIsLoading(false)} />
       {!isLoading && <InfoContainer />}
